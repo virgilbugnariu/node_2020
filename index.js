@@ -2,8 +2,6 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 const port = 3000;
-const Furminator = require('./Furminator');
-const hackNSA = require('./MrRobot');
 const jwt = require('jsonwebtoken');
 
 const config = {
@@ -11,24 +9,6 @@ const config = {
 };
 
 app.use(bodyParser.json());
-app.get('/hello-world', function(req, res) {
-  const furminator = new Furminator();
-  const body = furminator.getFact();
-
-  body.then((body) => {
-    res.send(body.text);
-  });
-});
-
-app.get('/hackNSA', async function(req, res) {
-  const furminator = new Furminator();
-  const { password } = await hackNSA();
-  const { text } = await furminator.getFact();
-  res.send({
-    password,
-    text,
-  });
-});
 
 const authenticationMiddleware = (req, res, next) => {
   jwt.verify(req.headers.authorization, config.JWTSECRET, (err, data) => {
@@ -41,7 +21,6 @@ const authenticationMiddleware = (req, res, next) => {
     }
   });
 };
-
 
 app.post('/login', (req, res) => {
   const { user, pass } = req.body;
@@ -63,6 +42,13 @@ app.get('/graphql', authenticationMiddleware, async function(req, res) {
     status: "ok"
   }, 200);
 });
+
+app.get('/graphql/public', async function(req, res) {
+  res.send({
+    status: "ok"
+  }, 200);
+});
+
 
 app.listen(port, function() {
   console.log('server started');

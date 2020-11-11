@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const jwt = require('jsonwebtoken');
-
+const models = require('./models');
 const config = {
   JWTSECRET: 'SuperSecretKey',
 };
@@ -49,6 +49,16 @@ app.get('/graphql/public', async function(req, res) {
   }, 200);
 });
 
+app.get('/users/:userId', async function(req, res) {
+  const userId = req.params.userId;
+  const user = await models.User.findByPk(userId);
+
+  res.send({
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+  });
+});
 
 app.listen(port, function() {
   console.log('server started');

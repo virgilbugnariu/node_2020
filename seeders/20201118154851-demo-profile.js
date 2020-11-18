@@ -1,5 +1,4 @@
 'use strict';
-const faker = require('faker');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -12,15 +11,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    
-    const mockUsers = new Array(100).fill().map(() => ({
-        email: faker.internet.email(),
-        password: 'testuts',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    }));
-    
-    await queryInterface.bulkInsert('Users', mockUsers, {});
+   
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -30,6 +21,5 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('Users', null, {});
   }
 };

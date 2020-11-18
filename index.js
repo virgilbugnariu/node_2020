@@ -60,6 +60,42 @@ app.get('/users/:userId', async function(req, res) {
   });
 });
 
+
+app.get('/users/:userId/profile', async function(req, res) {
+  const userId = req.params.userId;
+  const user = await models.User.findByPk(userId);
+  const profile = await user.getProfile();
+
+  res.send({
+    email: user.email,
+    profile,
+  });
+});
+
+app.post('/users/:userId/post', async function(req, res) {
+  const userId = req.params.userId;
+  const user = await models.User.findByPk(userId);
+  const post = await user.createPost({
+    title: 'testuts',
+    body: 'caca',
+  });
+  
+  res.send({
+    status: 'ok',
+  });
+});
+
+app.post('/post/:postId/tag/:tagId/associate', async (req, res) => {
+  const { postId, tagId } = req.params;
+  const post = await models.Post.findByPk(postId);
+  const tag = await models.Tag.findByPk(tagId);
+  console.log('tag', tag)
+  await post.addTag(tag);
+  res.send({
+    status: 'ok',
+  });
+});
+
 app.listen(port, function() {
   console.log('server started');
 });

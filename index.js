@@ -76,8 +76,8 @@ app.post('/users/:userId/post', async function(req, res) {
   const userId = req.params.userId;
   const user = await models.User.findByPk(userId);
   const post = await user.createPost({
-    title: 'testuts',
-    body: 'caca',
+    title: 'Title',
+    body: 'Body',
   });
   
   res.send({

@@ -19,7 +19,6 @@ const mutationType = new GraphQLObjectType({
       resolve: async (_, { postInput }, context) => {
         // `user` vine din `authenticationMiddleware`
         const { user } = context;
-        
         // Daca nu exista `user` pe context inseamna ca userul nu este autentificat.
         if(!user) {
           return null;

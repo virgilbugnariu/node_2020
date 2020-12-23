@@ -1,5 +1,7 @@
 'use strict';
 const faker = require('faker');
+const config = require('../config/appConfig');
+const bcrypt = require('bcrypt');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -12,10 +14,11 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    const hashedPassword = await bcrypt.hash('parolaTest', config.SALT_ROUNDS);
     
     const mockUsers = new Array(10).fill().map(() => ({
         email: faker.internet.email(),
-        password: 'testuts',
+        password: hashedPassword,
         createdAt: new Date(),
         updatedAt: new Date(),
     }));

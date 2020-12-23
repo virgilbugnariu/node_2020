@@ -3,7 +3,8 @@ const models = require('../models');
 const postType = require('./types/postType');
 const postInputType = require('./inputTypes/postInputType');
 const jwt = require('jsonwebtoken');
-const config = require('../config/config');
+const config = require('../config/appConfig');
+const bcrypt = require('bcrypt');
 
 const mutationType = new GraphQLObjectType({
   name: 'Mutation',
@@ -43,15 +44,16 @@ const mutationType = new GraphQLObjectType({
         const user = await models.User.findOne({
           where: {
             email,
-            password,
           }
         });
 
-
         if(user) {
-          // Pasam `userId` in token pentru a-l folosi la validarea tokenului (authenticationMiddleware)
-          const token = jwt.sign({userId: user.id}, config.JWTSECRET);
-          return token;
+          const isValid = await bcrypt.compare(password, user.password);
+          if(isValid) {
+            // Pasam `userId` in token pentru a-l folosi la validarea tokenului (authenticationMiddleware)
+            const token = jwt.sign({userId: user.id}, config.JWTSECRET);
+            return token;
+          }
         }
 
         return null;

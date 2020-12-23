@@ -4,7 +4,7 @@ const schema = require('./graphql');
 const authenticationMiddleware = require('./middlewares/authenticationMiddleware');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 
 app.use('/graphql', authenticationMiddleware, graphqlHTTP({
